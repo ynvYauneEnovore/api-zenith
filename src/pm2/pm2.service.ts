@@ -10,10 +10,10 @@ export class Pm2Service implements OnModuleInit, OnModuleDestroy {
   onModuleInit() {
     pm2.connect((err) => {
       if (err) {
-        console.error('Error al conectar con PM2:', err);
+        console.error('Error connecting to PM2:', err);
         process.exit(2);
       }
-      console.log('✅ Conectado exitosamente al demonio de PM2');
+      console.log('Successfully connected to PM2 daemon');
     });
   }
 
@@ -25,7 +25,7 @@ export class Pm2Service implements OnModuleInit, OnModuleDestroy {
     return new Promise((resolve, reject) => {
       pm2.list((err, list) => {
         if (err) {
-          reject(new InternalServerErrorException('Fallo al obtener los procesos de PM2'));
+          reject(new InternalServerErrorException('Failed to retrieve PM2 processes'));
         } else {
           resolve(list);
         }
@@ -37,9 +37,9 @@ export class Pm2Service implements OnModuleInit, OnModuleDestroy {
     return new Promise((resolve, reject) => {
       pm2.restart(id, (err) => {
         if (err) {
-          return reject(new InternalServerErrorException(`No se pudo reiniciar el proceso ${id}`));
+          return reject(new InternalServerErrorException(`Failed to restart process ${id}`));
         }
-        resolve({ message: `Proceso ${id} reiniciado exitosamente` });
+        resolve({ message: `Process ${id} restarted successfully` });
       });
     });
   }
@@ -48,9 +48,9 @@ export class Pm2Service implements OnModuleInit, OnModuleDestroy {
     return new Promise((resolve, reject) => {
       pm2.reload(id, (err) => {
         if (err) {
-          return reject(new InternalServerErrorException(`No se pudo recargar el proceso ${id}`));
+          return reject(new InternalServerErrorException(`Failed to reload process ${id}`));
         }
-        resolve({ message: `Proceso ${id} recargado (Zero Downtime) exitosamente` });
+        resolve({ message: `Process ${id} reloaded successfully` });
       });
     });
   }
@@ -59,9 +59,9 @@ export class Pm2Service implements OnModuleInit, OnModuleDestroy {
     return new Promise((resolve, reject) => {
       pm2.stop(id, (err) => {
         if (err) {
-          return reject(new InternalServerErrorException(`No se pudo detener el proceso ${id}`));
+          return reject(new InternalServerErrorException(`Failed to stop process ${id}`));
         }
-        resolve({ message: `Proceso ${id} detenido` });
+        resolve({ message: `Process ${id} stopped` });
       });
     });
   }
@@ -70,9 +70,9 @@ export class Pm2Service implements OnModuleInit, OnModuleDestroy {
     return new Promise((resolve, reject) => {
       pm2.delete(id, (err) => {
         if (err) {
-          return reject(new InternalServerErrorException(`No se pudo eliminar el proceso ${id}`));
+          return reject(new InternalServerErrorException(`Failed to delete process ${id}`));
         }
-        resolve({ message: `Proceso ${id} eliminado de PM2` });
+        resolve({ message: `Process ${id} deleted from PM2` });
       });
     });
   }
@@ -82,9 +82,9 @@ export class Pm2Service implements OnModuleInit, OnModuleDestroy {
     return new Promise((resolve, reject) => {
       (pm2 as any).scale(appName, instances, (err: any) => {
         if (err) {
-          return reject(new InternalServerErrorException(`No se pudo escalar la aplicación ${appName}`));
+          return reject(new InternalServerErrorException(`Failed to scale application ${appName}`));
         }
-        resolve({ message: `Aplicación ${appName} escalada a ${instances} instancias exitosamente` });
+        resolve({ message: `Application ${appName} scaled to ${instances} instances successfully` });
       });
     });
   }
@@ -93,9 +93,9 @@ export class Pm2Service implements OnModuleInit, OnModuleDestroy {
     return new Promise((resolve, reject) => {
       pm2.killDaemon((err) => {
         if (err) {
-          return reject(new InternalServerErrorException('Error al intentar apagar el demonio de PM2'));
+          return reject(new InternalServerErrorException('Failed to kill PM2 daemon'));
         }
-        resolve({ message: 'Demonio de PM2 apagado correctamente' });
+        resolve({ message: 'PM2 daemon killed successfully' });
       });
     });
   }
@@ -112,9 +112,9 @@ export class Pm2Service implements OnModuleInit, OnModuleDestroy {
         },
         (err, res) => {
           if (err) {
-            return reject(new InternalServerErrorException(`Fallo al enviar datos al proceso ${id}`));
+            return reject(new InternalServerErrorException(`Failed to send data to process ${id}`));
           }
-          resolve({ message: `Datos inyectados correctamente al proceso ${id}` });
+          resolve({ message: `Data successfully injected into process ${id}` });
         }
       );
     });

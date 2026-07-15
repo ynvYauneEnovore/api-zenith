@@ -63,7 +63,7 @@ export class Pm2Controller {
     @Body('instances') instances: number | string,
   ) {
     if (!instances) {
-      throw new InternalServerErrorException('Debes proporcionar el número de instancias');
+      throw new InternalServerErrorException('You must provide the number of instances');
     }
     return await this.pm2Service.scaleProcess(appName, instances);
   }
@@ -79,7 +79,7 @@ export class Pm2Controller {
     @Body() payload: any,
   ) {
     if (!payload || Object.keys(payload).length === 0) {
-      throw new InternalServerErrorException('El body no puede estar vacío');
+      throw new InternalServerErrorException('Payload body cannot be empty');
     }
     return await this.pm2Service.sendDataToProcess(Number(id), payload);
   }

@@ -9,21 +9,21 @@ export class Pm2Gateway implements OnGatewayInit {
   server: Server;
 
   afterInit() {
-    console.log('📡 Servidor de WebSockets (Socket.io) iniciado');
+    console.log('WebSocket Server (Socket.io) initialized');
 
     pm2.connect((connectErr) => {
       if (connectErr) {
-        console.error('Error al conectar con PM2:', connectErr);
+        console.error('Error connecting to PM2:', connectErr);
         return;
       }
 
       pm2.launchBus((err, bus) => {
         if (err) {
-          console.error('Error al iniciar el PM2 Bus:', err);
+          console.error('Error starting PM2 Bus:', err);
           return;
         }
 
-        console.log('🚌 PM2 Bus interceptado correctamente');
+        console.log('PM2 Bus intercepted successfully');
 
         bus.on('log:out', (packet) => {
           this.server.emit('pm2-log', {
@@ -45,7 +45,7 @@ export class Pm2Gateway implements OnGatewayInit {
           this.server.emit('pm2-alert', {
             app: packet.process.name,
             type: 'crash',
-            message: '¡El proceso se ha detenido por un error fatal!',
+            message: 'Process stopped due to a fatal error!',
             error_details: packet.data
           });
         });
