@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: zenith-agent-daemon
+  labels:
+    app: zenith-agent
+spec:
+  selector:
+    matchLabels:
+      app: zenith-agent
+  template:
+    metadata:
+      labels:
+        app: zenith-agent
+    spec:
+      containers:
+      - name: zenith-agent
+        image: tu-registro-docker/zenith-agent:latest
+        volumeMounts:
+        - name: pm2-socket
+          mountPath: /root/.pm2/rpc.sock
+      volumes:
+      - name: pm2-socket
+        hostPath:
+          
+          path: /home/ynv/.pm2/rpc.sock 
+          type: Socket
