@@ -56,4 +56,31 @@ export class Pm2Controller {
   async deleteApp(@Param('id') id: string) {
     return await this.pm2Service.deleteProcess(id);
   }
+
+  @Post('scale/:appName')
+  async scaleApp(
+    @Param('appName') appName: string,
+    @Body('instances') instances: number | string,
+  ) {
+    if (!instances) {
+      throw new InternalServerErrorException('Debes proporcionar el número de instancias');
+    }
+    return await this.pm2Service.scaleProcess(appName, instances);
+  }
+
+  @Post('system/kill')
+  async killPm2() {
+    return await this.pm2Service.killDaemon();
+  }
+
+  @Post('send-data/:id')
+  async sendDataToApp(
+    @Param('id') id: string,
+    @Body() payload: any,
+  ) {
+    if (!payload || Object.keys(payload).length === 0) {
+      throw new InternalServerErrorException('El body no puede estar vacío');
+    }
+    return await this.pm2Service.sendDataToProcess(Number(id), payload);
+  }
 }

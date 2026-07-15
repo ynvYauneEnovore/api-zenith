@@ -77,4 +77,47 @@ export class Pm2Service implements OnModuleInit, OnModuleDestroy {
     });
   }
 
+
+  async scaleProcess(appName: string, instances: number | string): Promise<{ message: string }> {
+    return new Promise((resolve, reject) => {
+      (pm2 as any).scale(appName, instances, (err: any) => {
+        if (err) {
+          return reject(new InternalServerErrorException(`No se pudo escalar la aplicación ${appName}`));
+        }
+        resolve({ message: `Aplicación ${appName} escalada a ${instances} instancias exitosamente` });
+      });
+    });
+  }
+
+  async killDaemon(): Promise<{ message: string }> {
+    return new Promise((resolve, reject) => {
+      pm2.killDaemon((err) => {
+        if (err) {
+          return reject(new InternalServerErrorException('Error al intentar apagar el demonio de PM2'));
+        }
+        resolve({ message: 'Demonio de PM2 apagado correctamente' });
+      });
+    });
+  }
+
+
+  async sendDataToProcess(id: number, dataPayload: any): Promise<{ message: string }> {
+    return new Promise((resolve, reject) => {
+      pm2.sendDataToProcessId(
+        id,
+        {
+          type: 'process:msg',
+          data: dataPayload,
+          topic: 'zenith-command'
+        },
+        (err, res) => {
+          if (err) {
+            return reject(new InternalServerErrorException(`Fallo al enviar datos al proceso ${id}`));
+          }
+          resolve({ message: `Datos inyectados correctamente al proceso ${id}` });
+        }
+      );
+    });
+  }
+
 }
