@@ -37,31 +37,6 @@ export class Pm2Controller {
     }
   }
 
-  @Post()
-  create(@Body() createPm2Dto: CreatePm2Dto) {
-    return this.pm2Service.create(createPm2Dto);
-  }
-
-  @Get()
-  findAll() {
-    return this.pm2Service.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.pm2Service.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePm2Dto: UpdatePm2Dto) {
-    return this.pm2Service.update(+id, updatePm2Dto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.pm2Service.remove(+id);
-  }
-
   @Post('restart/:id')
   async restartApp(@Param('id') id: string) {
     return await this.pm2Service.restartProcess(id);

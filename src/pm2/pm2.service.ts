@@ -77,23 +77,4 @@ export class Pm2Service implements OnModuleInit, OnModuleDestroy {
     });
   }
 
-  create(createPm2Dto: CreatePm2Dto) {
-    return 'This action adds a new pm2';
-  }
-
-  findAll() {
-    return `This action returns all pm2`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} pm2`;
-  }
-
-  update(id: number, updatePm2Dto: UpdatePm2Dto) {
-    return `This action updates a #${id} pm2`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} pm2`;
-  }
 }
