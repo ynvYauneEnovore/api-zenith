@@ -17,7 +17,6 @@ export class Pm2Service implements OnModuleInit, OnModuleDestroy {
     });
   }
 
-  // Se ejecuta al apagar el servidor para evitar fugas de memoria
   onModuleDestroy() {
     pm2.disconnect();
   }
@@ -30,6 +29,50 @@ export class Pm2Service implements OnModuleInit, OnModuleDestroy {
         } else {
           resolve(list);
         }
+      });
+    });
+  }
+
+  async restartProcess(id: string): Promise<{ message: string }> {
+    return new Promise((resolve, reject) => {
+      pm2.restart(id, (err) => {
+        if (err) {
+          return reject(new InternalServerErrorException(`No se pudo reiniciar el proceso ${id}`));
+        }
+        resolve({ message: `Proceso ${id} reiniciado exitosamente` });
+      });
+    });
+  }
+
+  async reloadProcess(id: string): Promise<{ message: string }> {
+    return new Promise((resolve, reject) => {
+      pm2.reload(id, (err) => {
+        if (err) {
+          return reject(new InternalServerErrorException(`No se pudo recargar el proceso ${id}`));
+        }
+        resolve({ message: `Proceso ${id} recargado (Zero Downtime) exitosamente` });
+      });
+    });
+  }
+
+  async stopProcess(id: string): Promise<{ message: string }> {
+    return new Promise((resolve, reject) => {
+      pm2.stop(id, (err) => {
+        if (err) {
+          return reject(new InternalServerErrorException(`No se pudo detener el proceso ${id}`));
+        }
+        resolve({ message: `Proceso ${id} detenido` });
+      });
+    });
+  }
+
+  async deleteProcess(id: string): Promise<{ message: string }> {
+    return new Promise((resolve, reject) => {
+      pm2.delete(id, (err) => {
+        if (err) {
+          return reject(new InternalServerErrorException(`No se pudo eliminar el proceso ${id}`));
+        }
+        resolve({ message: `Proceso ${id} eliminado de PM2` });
       });
     });
   }
